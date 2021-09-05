@@ -1,0 +1,67 @@
+.home{
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url("../media/back-bg.jpg");
+    background-size: cover;
+    max-width: 100%;
+    height: 100vh;
+}
+
+.welcome-note{
+    color: white;
+    font-style: italic;
+    font-weight: bolder;
+    font-family: "Bookman Old Style", serif;
+    font-size: 5vw;
+    padding-top: 20px;
+    text-align: center;
+}
+
+.motto{
+    color: burlywood;
+    font-weight: bold;
+    font-style: italic;
+    padding-top: 20px;
+    text-align: center;
+    font-size: 2vw;
+}
+
+.login-card{
+    width: 50%;
+    height: auto;
+    margin-left: 25%;
+    margin-top: 10%;
+}
+
+.card-heading{
+    width: 100%;
+    height: auto;
+    font-weight: bold;
+    font-style: italic;
+    font-family: "Times New Roman", cursive;
+    font-size: 1.5vw;
+}
+
+.chat-box{
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url("../media/JACM4W.jpg");
+    background-attachment: fixed;
+    background-size: cover;
+    height: 100vh;
+    width: 100%;
+    display: none;
+
+}
+
+.chat-box-instruction{
+    text-align: center;
+    color: white;
+}
+
+.input-group1{
+    width: 50%;
+    margin-left: 25%;
+}
+
+.table12{
+    color: white;
+    margin-left: 25%;
+    font-size: 1.2vw;
+}
