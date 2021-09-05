@@ -18,11 +18,24 @@ function connect(){
     stompClient = Stomp.over(socket)
     stompClient.connect({},function(frame) {
         $(".greet").prepend(localStorage.getItem("name"))
-        $(".home").css("display","none")
-        $(".chat-box").css("display","block")
-        stompClient.subscribe("/chat/chatBox",function (response) {
-            showMessage(JSON.parse(response.body))
-        })
+        $.ajax({
+            url: "/login",
+            data: JSON.stringify({name: localStorage.getItem("name")}),
+            contentType: 'application/json',
+            type: 'POST',
+            dataType: 'json',
+            success: function(response) {
+                localStorage.setItem("id",response.idea)
+                $(".home").css("display","none")
+                $(".chat-box").css("display","block")
+                stompClient.subscribe("/chat/chatBox",function (response) {
+                    showMessage(JSON.parse(response.body))
+                })
+            },
+            error: function(error) {
+
+            }
+        });
     })
 }
 
@@ -46,6 +59,19 @@ function logout(){
     if(stompClient!==null){
         localStorage.removeItem("name")
         stompClient.disconnect()
-        window.location.replace("http://localhost:8080/")
+        $.ajax({
+            url: "/logout",
+            data: JSON.stringify({name: localStorage.getItem("id")}),
+            contentType: 'application/json',
+            type: 'POST',
+            dataType: 'json',
+            success: function(response) {
+                console.log(response)
+                window.location.replace("http://localhost:8080/")
+            },
+            error: function(error) {
+
+            }
+        });
     }
 }
