@@ -37,9 +37,16 @@ public class ScreenController {
     public ResponseEntity<?> login(@RequestBody HashMap<String, Object> map){
         Person person = new Person((String) map.get("name"),"waiting");
         personRepository.save(person);
-        return ResponseEntity.ok(Map.of("msg", "updated"));
+        return ResponseEntity.ok(Map.of("idea", 1));
     }
 
-
+    @ResponseBody
+    @RequestMapping("/logout")
+    public ResponseEntity<?> logout(@RequestBody HashMap<String, Object> map){
+        Optional<Person> persons = Optional.ofNullable(personRepository.findById(Integer.parseInt((String) map.get("id"))));
+        Person person = persons.get();
+        personRepository.delete(person);
+        return ResponseEntity.ok(Map.of("msg", "updated"));
+    }
 
 }

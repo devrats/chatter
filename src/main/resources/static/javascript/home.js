@@ -61,7 +61,7 @@ function logout(){
         stompClient.disconnect()
         $.ajax({
             url: "/logout",
-            data: JSON.stringify({name: localStorage.getItem("id")}),
+            data: JSON.stringify({id: localStorage.getItem("id")}),
             contentType: 'application/json',
             type: 'POST',
             dataType: 'json',
