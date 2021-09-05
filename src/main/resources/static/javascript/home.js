@@ -18,8 +18,7 @@ function connect(){
     stompClient = Stomp.over(socket)
     stompClient.connect({},function(frame) {
         $(".greet").prepend(localStorage.getItem("name"))
-        $(".home").css("display","none")
-        $(".chat-box").css("display","block")
+        window.location.replace("http://localhost:8080/box")
         stompClient.subscribe("/chat/chatBox",function (response) {
             showMessage(JSON.parse(response.body))
         })

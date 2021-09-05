@@ -17,4 +17,9 @@ public class ScreenController {
     public String index(){
         return "index";
     }
+
+    @RequestMapping("/box")
+    public String box(){
+        return "box";
+    }
 }

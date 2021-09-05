@@ -1,10 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <link rel="stylesheet" href="/webjars/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/home.css">
+    <script src="/webjars/jquery/jquery.min.js"></script>
+    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+    <script src="/javascript/home.js"></script>
+    <title>Chat Room</title>
 </head>
 <body>
-
+<div class="chat-box chatter">
+    <div>
+        <h1 class="welcome-note">
+            Hey! <span class="greet"></span> Have Fun
+        </h1>
+        <p class="motto">
+            Remove Waiting Time From Your Life And Enjoy With Random Peoples
+        </p>
+        <div class="card-header chat-box-instruction card-heading">
+            Please Be Polite And Do not Abuse Each Other
+        </div>
+        <div class="form-group input-group input-group1">
+            <label for="message"></label>
+            <input type="text" required class="form-control mb-2" style="margin-right: 6px"
+                   id="message" placeholder="Enter Your Message...">
+            <div class="input-group-append">
+                <button type="submit" onclick="sendMessage()" id="send" class="btn btn-primary mb-2">Send</button>
+                <button type="submit" onclick="logout()" id="logout" class="btn btn-primary mb-2">log out</button>
+            </div>
+        </div>
+        <table class="table12">
+        </table>
+    </div>
+</div>
 </body>
 </html>
