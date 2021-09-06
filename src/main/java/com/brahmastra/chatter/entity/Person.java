@@ -21,6 +21,7 @@ public class Person {
     private int id;
     private String name;
     private String status;
+    private String url;
 
     @Override
     public String toString() {
@@ -28,6 +29,7 @@ public class Person {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", status='" + status + '\'' +
+                ", url='" + url + '\'' +
                 '}';
     }
 
@@ -36,12 +38,27 @@ public class Person {
         if (this == o) return true;
         if (!(o instanceof Person)) return false;
         Person person = (Person) o;
-        return getId() == person.getId() && Objects.equals(getName(), person.getName()) && Objects.equals(getStatus(), person.getStatus());
+        return getId() == person.getId() && Objects.equals(getName(), person.getName()) && Objects.equals(getStatus(), person.getStatus()) && Objects.equals(getUrl(), person.getUrl());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getName(), getStatus());
+        return Objects.hash(getId(), getName(), getStatus(), getUrl());
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public Person(int id, String name, String status, String url) {
+        this.id = id;
+        this.name = name;
+        this.status = status;
+        this.url = url;
     }
 
     public int getId() {

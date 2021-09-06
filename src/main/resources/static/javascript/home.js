@@ -28,7 +28,7 @@ function connect(){
                 localStorage.setItem("id",response.idea)
                 $(".home").css("display","none")
                 $(".chat-box").css("display","block")
-                stompClient.subscribe("/chat/chatBox",function (response) {
+                stompClient.subscribe(response.url,function (response) {
                     showMessage(JSON.parse(response.body))
                 })
             },

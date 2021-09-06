@@ -15,6 +15,7 @@ import java.util.List;
 
 public interface PersonRepository extends JpaRepository<Person,Integer> {
 
-    public List<Person> findAllByStatus(String status);
+    public List<Person> findAllByStatusAndIdIsNot(String status,int id);
     public Person findById(int id);
+
 }
