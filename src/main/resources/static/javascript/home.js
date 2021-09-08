@@ -26,9 +26,8 @@ function connect(){
             dataType: 'json',
             success: function(response) {
                 localStorage.setItem("id",response.idea)
-                $(".home").css("display","none")
-                $(".chat-box").css("display","block")
-                stompClient.subscribe(response.url,function (response) {
+                window.location.replace("http://localhost:8081/book/")
+                stompClient.subscribe("/chat/chat/box",function (response) {
                     showMessage(JSON.parse(response.body))
                 })
             },
@@ -67,11 +66,37 @@ function logout(){
             dataType: 'json',
             success: function(response) {
                 console.log(response)
-                window.location.replace("http://localhost:8080/")
+                window.location.replace("http://localhost:8081/")
             },
             error: function(error) {
 
             }
         });
     }
+}
+
+
+function start(){
+    let socket = new SockJS('/server1')
+    stompClient = Stomp.over(socket)
+    stompClient.connect({},function(frame) {
+        console.log(localStorage.getItem("name"))
+        console.log(localStorage.getItem("id"))
+        $(".greet").prepend(localStorage.getItem("name"))
+        $.ajax({
+            url: "/book/login",
+            data: JSON.stringify({id: localStorage.getItem("id")}),
+            contentType: 'application/json',
+            type: 'POST',
+            dataType: 'json',
+            success: function(response) {
+                stompClient.subscribe(response.url,function (response) {
+                    showMessage(JSON.parse(response.body))
+                })
+            },
+            error: function(error) {
+
+            }
+        });
+    })
 }

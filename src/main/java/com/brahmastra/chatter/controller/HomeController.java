@@ -8,21 +8,100 @@
 package com.brahmastra.chatter.controller;
 
 import com.brahmastra.chatter.entity.Message;
+import com.brahmastra.chatter.entity.Person;
+import com.brahmastra.chatter.repository.PersonRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @Controller
 public class HomeController {
 
-    @MessageMapping("message")
-    @SendTo("/chat/chatBox")
+    public String urls;
+
+    @Autowired
+    private PersonRepository personRepository;
+
+    @MessageMapping("/message")
+    @SendTo("")
     @ResponseBody
     public Message message(@RequestBody Message message){
         return message;
     }
+
+    @ResponseBody
+    @RequestMapping("/login")
+    public ResponseEntity<?> login(@RequestBody HashMap<String, Object> map) {
+        Person person = new Person((String) map.get("name"), "waiting");
+        Person save = personRepository.save(person);
+        return ResponseEntity.ok(Map.of("idea",save.getId()));
+    }
+
+    @ResponseBody
+    @RequestMapping("/logout")
+    public ResponseEntity<?> logout(@RequestBody HashMap<String, Object> map) {
+        Optional<Person> persons = Optional.ofNullable(personRepository.findById(Integer.parseInt((String) map.get("id"))));
+        Person person = persons.get();
+        personRepository.delete(person);
+        return ResponseEntity.ok(Map.of("msg", "updated"));
+    }
+
+    @ResponseBody
+    @RequestMapping("/book/login")
+    public synchronized ResponseEntity<?> service(@RequestBody HashMap<String, Object> map) {
+        Person personRepositoryById;
+        Person personRepositoryById1;
+        while (true) {
+            System.out.println(personRepository.findById(Integer.parseInt((String) map.get("id"))));
+            if (personRepository.findById(Integer.parseInt((String) map.get("id"))).getStatus().equals("login")) {
+                try {
+                    System.out.println("dev");
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                String url = personRepository.findById(Integer.parseInt((String) map.get("id"))).getUrl();
+                urls = url;
+                HashMap hashMap = new HashMap<String, String>();
+                hashMap.put("idea", Integer.parseInt((String) map.get("id")));
+                hashMap.put("url", url);
+                return ResponseEntity.ok(hashMap);
+            } else {
+                List<Person> waiting = personRepository.findAllByStatusAndIdIsNot("waiting", Integer.parseInt((String) map.get("id")));
+                if (!waiting.isEmpty()) {
+                    personRepositoryById1 = personRepository.findById(waiting.get(0).getId());
+                    personRepositoryById = personRepository.findById(Integer.parseInt((String) map.get("id")));
+                    personRepositoryById1.setStatus("login");
+                    personRepositoryById.setStatus("login");
+                    break;
+                } else {
+                    continue;
+                }
+            }
+        }
+        String url = "/chat/chatBox/" + personRepositoryById.getName() + personRepositoryById.getId() + "/" +
+                personRepositoryById1.getName() + personRepositoryById1.getId();
+        personRepositoryById.setUrl(url);
+        personRepositoryById1.setUrl(url);
+        urls = url;
+        personRepository.save(personRepositoryById);
+        personRepository.save(personRepositoryById1);
+        HashMap hashMap = new HashMap<String, String>();
+        hashMap.put("idea", Integer.parseInt((String) map.get("id")));
+        hashMap.put("url", url);
+        return ResponseEntity.ok(hashMap);
+    }
+
 }
