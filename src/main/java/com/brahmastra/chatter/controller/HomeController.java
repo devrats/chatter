@@ -12,13 +12,16 @@ import com.brahmastra.chatter.entity.Person;
 import com.brahmastra.chatter.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
 
 import java.util.HashMap;
 import java.util.List;
@@ -29,13 +32,17 @@ import java.util.Optional;
 @Controller
 public class HomeController {
 
-    public String urls;
+    public static String urls;
+
 
     @Autowired
     private PersonRepository personRepository;
 
+    @Autowired
+    private SimpMessagingTemplate simpMessagingTemplate;
+
     @MessageMapping("/message")
-    @SendTo("")
+    @SendTo("/chat/chatBox/nidhi singh1/Devvrat2")
     @ResponseBody
     public Message message(@RequestBody Message message){
         return message;
@@ -64,10 +71,8 @@ public class HomeController {
         Person personRepositoryById;
         Person personRepositoryById1;
         while (true) {
-            System.out.println(personRepository.findById(Integer.parseInt((String) map.get("id"))));
             if (personRepository.findById(Integer.parseInt((String) map.get("id"))).getStatus().equals("login")) {
                 try {
-                    System.out.println("dev");
                     Thread.sleep(2000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();

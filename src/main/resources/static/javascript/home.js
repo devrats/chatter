@@ -26,7 +26,7 @@ function connect(){
             dataType: 'json',
             success: function(response) {
                 localStorage.setItem("id",response.idea)
-                window.location.replace("http://localhost:8081/book/")
+                window.location.replace("http://localhost:8080/book/")
                 stompClient.subscribe("/chat/chat/box",function (response) {
                     showMessage(JSON.parse(response.body))
                 })
@@ -39,8 +39,6 @@ function connect(){
 }
 
 function showMessage(message) {
-    console.log(message.name)
-    console.log(message.text)
     $(".table12").prepend(`<span> <b><i>${message.name} : </i></b>${message.text}</span> <br>`)
 }
 
@@ -65,8 +63,7 @@ function logout(){
             type: 'POST',
             dataType: 'json',
             success: function(response) {
-                console.log(response)
-                window.location.replace("http://localhost:8081/")
+                window.location.replace("http://localhost:8080/")
             },
             error: function(error) {
 
@@ -80,8 +77,6 @@ function start(){
     let socket = new SockJS('/server1')
     stompClient = Stomp.over(socket)
     stompClient.connect({},function(frame) {
-        console.log(localStorage.getItem("name"))
-        console.log(localStorage.getItem("id"))
         $(".greet").prepend(localStorage.getItem("name"))
         $.ajax({
             url: "/book/login",
