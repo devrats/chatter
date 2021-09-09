@@ -46,6 +46,8 @@
     background-size: cover;
     height: 100vh;
     width: 100%;
+    position: absolute;
+    z-index: -2;
 
 }
 
@@ -63,4 +65,15 @@
     color: white;
     margin-left: 25%;
     font-size: 1.2vw;
+}
+
+.loading{
+    background-image: url("../media/final_6139e2090e6114013a6781ad_373084.gif");
+    background-attachment: fixed;
+    background-size: cover;
+    height: 100vh;
+    width: 100%;
+    opacity: .82;
+    position: absolute;
+    z-index: 24;
 }

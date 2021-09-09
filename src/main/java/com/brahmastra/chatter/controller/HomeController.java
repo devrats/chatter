@@ -46,7 +46,6 @@ public class HomeController {
     @MessageMapping("/message")
     @ResponseBody
     public void message(@Payload Message message){
-        System.out.println(HomeController.urls);
         simpMessagingTemplate.convertAndSend(HomeController.urls,message);
     }
 

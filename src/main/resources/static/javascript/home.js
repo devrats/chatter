@@ -84,6 +84,7 @@ function start(){
             type: 'POST',
             dataType: 'json',
             success: function(response) {
+                $(".loading").css("display","none")
                 stompClient.subscribe(response.url,function (response) {
                     showMessage(JSON.parse(response.body))
                 })
