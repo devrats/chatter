@@ -11,9 +11,11 @@ import com.brahmastra.chatter.entity.Message;
 import com.brahmastra.chatter.entity.Person;
 import com.brahmastra.chatter.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
@@ -42,10 +44,10 @@ public class HomeController {
     private SimpMessagingTemplate simpMessagingTemplate;
 
     @MessageMapping("/message")
-    @SendTo("/chat/chatBox/nidhi singh1/Devvrat2")
     @ResponseBody
-    public Message message(@RequestBody Message message){
-        return message;
+    public void message(@Payload Message message){
+        System.out.println(HomeController.urls);
+        simpMessagingTemplate.convertAndSend(HomeController.urls,message);
     }
 
     @ResponseBody

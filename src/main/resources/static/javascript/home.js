@@ -27,7 +27,7 @@ function connect(){
             success: function(response) {
                 localStorage.setItem("id",response.idea)
                 window.location.replace("http://localhost:8080/book/")
-                stompClient.subscribe("/chat/chat/box",function (response) {
+                stompClient.subscribe("chat/chatbox",function (response) {
                     showMessage(JSON.parse(response.body))
                 })
             },
@@ -48,7 +48,6 @@ function sendMessage() {
         name:localStorage.getItem("name"),
         text:message
     }
-    $("#message").val("")
     stompClient.send("/chatting/message",{},JSON.stringify(jasonOb))
 }
 
