@@ -22,6 +22,30 @@ public class Person {
     private String name;
     private String status;
     private String url;
+    private String password;
+    private String role;
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public Person(String name, String status, String role) {
+        this.name = name;
+        this.status = status;
+        this.role = role;
+    }
 
     @Override
     public String toString() {

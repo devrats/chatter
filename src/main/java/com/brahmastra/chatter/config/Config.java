@@ -23,7 +23,7 @@ public class Config implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.enableSimpleBroker("/chat");
+        registry.enableSimpleBroker("queue");
         registry.setApplicationDestinationPrefixes("/chatting");
     }
 }

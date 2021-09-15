@@ -18,8 +18,9 @@ function connect(){
     stompClient = Stomp.over(socket)
     stompClient.connect({},function(frame) {
         $(".greet").prepend(localStorage.getItem("name"))
+        console.log("jjjjj")
         $.ajax({
-            url: "/login",
+            url: "/enter",
             data: JSON.stringify({name: localStorage.getItem("name")}),
             contentType: 'application/json',
             type: 'POST',
@@ -27,7 +28,7 @@ function connect(){
             success: function(response) {
                 localStorage.setItem("id",response.idea)
                 window.location.replace("http://localhost:8080/book/")
-                stompClient.subscribe("chat/chatbox",function (response) {
+                stompClient.subscribe("/users/queue/messages",function (response) {
                     showMessage(JSON.parse(response.body))
                 })
             },
@@ -56,7 +57,7 @@ function logout(){
         localStorage.removeItem("name")
         stompClient.disconnect()
         $.ajax({
-            url: "/logout",
+            url: "/exit",
             data: JSON.stringify({id: localStorage.getItem("id")}),
             contentType: 'application/json',
             type: 'POST',
@@ -78,14 +79,14 @@ function start(){
     stompClient.connect({},function(frame) {
         $(".greet").prepend(localStorage.getItem("name"))
         $.ajax({
-            url: "/book/login",
+            url: "/book/enter",
             data: JSON.stringify({id: localStorage.getItem("id")}),
             contentType: 'application/json',
             type: 'POST',
             dataType: 'json',
             success: function(response) {
                 $(".loading").css("display","none")
-                stompClient.subscribe(response.url,function (response) {
+                stompClient.subscribe("/user/queue/messages",function (response) {
                     showMessage(JSON.parse(response.body))
                 })
             },

@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
 
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,20 +46,21 @@ public class HomeController {
 
     @MessageMapping("/message")
     @ResponseBody
-    public void message(@Payload Message message){
-        simpMessagingTemplate.convertAndSend(HomeController.urls,message);
+    public void message(@Payload Message message, Principal principal){
+        System.out.println(principal.getName());
+        simpMessagingTemplate.convertAndSendToUser("user", "/queue/messages",message);
     }
 
     @ResponseBody
-    @RequestMapping("/login")
+    @RequestMapping("/enter")
     public ResponseEntity<?> login(@RequestBody HashMap<String, Object> map) {
-        Person person = new Person((String) map.get("name"), "waiting");
+        Person person = new Person((String) map.get("name"), "waiting","ROLE_USER");
         Person save = personRepository.save(person);
         return ResponseEntity.ok(Map.of("idea",save.getId()));
     }
 
     @ResponseBody
-    @RequestMapping("/logout")
+    @RequestMapping("/exit")
     public ResponseEntity<?> logout(@RequestBody HashMap<String, Object> map) {
         Optional<Person> persons = Optional.ofNullable(personRepository.findById(Integer.parseInt((String) map.get("id"))));
         Person person = persons.get();
@@ -67,17 +69,12 @@ public class HomeController {
     }
 
     @ResponseBody
-    @RequestMapping("/book/login")
+    @RequestMapping("/book/enter")
     public synchronized ResponseEntity<?> service(@RequestBody HashMap<String, Object> map) {
         Person personRepositoryById;
         Person personRepositoryById1;
         while (true) {
             if (personRepository.findById(Integer.parseInt((String) map.get("id"))).getStatus().equals("login")) {
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
                 String url = personRepository.findById(Integer.parseInt((String) map.get("id"))).getUrl();
                 urls = url;
                 HashMap hashMap = new HashMap<String, String>();
