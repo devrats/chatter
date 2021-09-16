@@ -12,6 +12,7 @@ import com.brahmastra.chatter.entity.Person;
 import com.brahmastra.chatter.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -32,8 +33,6 @@ import java.util.Optional;
 @Controller
 public class HomeController {
 
-    public static String urls;
-
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     @Autowired
@@ -42,11 +41,12 @@ public class HomeController {
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
-    @MessageMapping("/message")
+    @MessageMapping("/message/{urls}")
     @ResponseBody
-    public void message(@Payload Message message, Principal principal){
-        System.out.println(principal.getName());
-        simpMessagingTemplate.convertAndSendToUser("user", "/queue/messages",message);
+    public void message(@DestinationVariable String urls, @Payload Message message, Principal principal){
+        Person byId = personRepository.findById(Integer.parseInt(urls));
+        System.out.println(byId);
+        simpMessagingTemplate.convertAndSendToUser(byId.getName(), "/queue/messages",message);
     }
 
     @ResponseBody
@@ -74,7 +74,6 @@ public class HomeController {
         while (true) {
             if (personRepository.findById(Integer.parseInt((String) map.get("id"))).getStatus().equals("login")) {
                 String url = personRepository.findById(Integer.parseInt((String) map.get("id"))).getUrl();
-                urls = url;
                 HashMap hashMap = new HashMap<String, String>();
                 hashMap.put("idea", Integer.parseInt((String) map.get("id")));
                 hashMap.put("url", url);
@@ -92,16 +91,15 @@ public class HomeController {
                 }
             }
         }
-        String url = "/chat/chatBox/" + personRepositoryById.getName() + personRepositoryById.getId() + "/" +
-                personRepositoryById1.getName() + personRepositoryById1.getId();
-        personRepositoryById.setUrl(url);
-        personRepositoryById1.setUrl(url);
-        urls = url;
+        String url1 = String.valueOf(personRepositoryById1.getId());
+        String url2 = String.valueOf(personRepositoryById.getId());
+        personRepositoryById.setUrl(url1);
+        personRepositoryById1.setUrl(url2);
         personRepository.save(personRepositoryById);
         personRepository.save(personRepositoryById1);
         HashMap hashMap = new HashMap<String, String>();
         hashMap.put("idea", Integer.parseInt((String) map.get("id")));
-        hashMap.put("url", url);
+        hashMap.put("url", url1);
         return ResponseEntity.ok(hashMap);
     }
 

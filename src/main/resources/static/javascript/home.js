@@ -48,7 +48,7 @@ function sendMessage() {
         name:localStorage.getItem("name"),
         text:message
     }
-    stompClient.send("/chatting/message",{},JSON.stringify(jasonOb))
+    stompClient.send("/chatting/message/" + localStorage.getItem("urls"),{},JSON.stringify(jasonOb))
 }
 
 function logout(){
@@ -85,6 +85,7 @@ function start(){
             dataType: 'json',
             success: function(response) {
                 $(".loading").css("display","none")
+                localStorage.setItem("urls",response.url)
                 stompClient.subscribe("/user/queue/messages",function (response) {
                     showMessage(JSON.parse(response.body))
                 })
