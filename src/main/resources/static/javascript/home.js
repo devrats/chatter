@@ -48,6 +48,7 @@ function sendMessage() {
         name:localStorage.getItem("name"),
         text:message
     }
+    showMessage(jasonOb)
     stompClient.send("/chatting/message/" + localStorage.getItem("urls"),{},JSON.stringify(jasonOb))
 }
 
