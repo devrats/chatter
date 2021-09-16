@@ -17,5 +17,5 @@ public interface PersonRepository extends JpaRepository<Person,Integer> {
 
     public List<Person> findAllByStatusAndIdIsNot(String status,int id);
     public Person findById(int id);
-
+    public Person findPersonByName(String s);
 }

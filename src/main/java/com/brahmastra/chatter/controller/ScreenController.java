@@ -21,7 +21,7 @@ public class ScreenController {
     }
 
 
-    @RequestMapping("/book")
+    @RequestMapping("/book/page")
     public String book() {
         return "book";
     }

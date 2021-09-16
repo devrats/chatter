@@ -22,9 +22,35 @@ import org.springframework.stereotype.Component;
 @EnableWebSecurity
 public class WebSecurity extends WebSecurityConfigurerAdapter {
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.cors().and().csrf().disable();
+    @Bean
+    public BCryptPasswordEncoder getBCryptPasswordEncoder() {
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        return bCryptPasswordEncoder;
     }
 
+    @Bean
+    public PersonDestailsService getPersonDestailsService() {
+        PersonDestailsService personDestailsService = new PersonDestailsService();
+        return personDestailsService;
+    }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.authenticationProvider(authenticationProvider());
+    }
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.authorizeRequests().antMatchers("/book/**").hasRole("USER")
+                .and()
+                .formLogin().defaultSuccessUrl("/book/page")
+                .and().csrf().disable();
+    }
+
+    public DaoAuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+        daoAuthenticationProvider.setUserDetailsService(getPersonDestailsService());
+        daoAuthenticationProvider.setPasswordEncoder(getBCryptPasswordEncoder());
+        return daoAuthenticationProvider;
+    }
 }

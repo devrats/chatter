@@ -25,6 +25,13 @@ public class Person {
     private String password;
     private String role;
 
+    public Person(String name, String status, String password, String role) {
+        this.name = name;
+        this.status = status;
+        this.password = password;
+        this.role = role;
+    }
+
     public String getPassword() {
         return password;
     }

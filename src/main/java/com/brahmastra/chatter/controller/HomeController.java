@@ -11,19 +11,16 @@ import com.brahmastra.chatter.entity.Message;
 import com.brahmastra.chatter.entity.Person;
 import com.brahmastra.chatter.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
 
 import java.security.Principal;
 import java.util.HashMap;
@@ -37,7 +34,8 @@ public class HomeController {
 
     public static String urls;
 
-
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
     @Autowired
     private PersonRepository personRepository;
 
@@ -54,7 +52,7 @@ public class HomeController {
     @ResponseBody
     @RequestMapping("/enter")
     public ResponseEntity<?> login(@RequestBody HashMap<String, Object> map) {
-        Person person = new Person((String) map.get("name"), "waiting","ROLE_USER");
+        Person person = new Person((String) map.get("name"), "waiting",bCryptPasswordEncoder.encode(" "),"ROLE_USER");
         Person save = personRepository.save(person);
         return ResponseEntity.ok(Map.of("idea",save.getId()));
     }

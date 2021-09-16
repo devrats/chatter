@@ -18,7 +18,6 @@ function connect(){
     stompClient = Stomp.over(socket)
     stompClient.connect({},function(frame) {
         $(".greet").prepend(localStorage.getItem("name"))
-        console.log("jjjjj")
         $.ajax({
             url: "/enter",
             data: JSON.stringify({name: localStorage.getItem("name")}),
@@ -27,7 +26,7 @@ function connect(){
             dataType: 'json',
             success: function(response) {
                 localStorage.setItem("id",response.idea)
-                window.location.replace("http://localhost:8080/book/")
+                window.location.replace("http://localhost:8080/book/page")
                 stompClient.subscribe("/users/queue/messages",function (response) {
                     showMessage(JSON.parse(response.body))
                 })
