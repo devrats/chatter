@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
@@ -62,7 +61,15 @@ public class HomeController {
     public ResponseEntity<?> logout(@RequestBody HashMap<String, Object> map) {
         Optional<Person> persons = Optional.ofNullable(personRepository.findById(Integer.parseInt((String) map.get("id"))));
         Person person = persons.get();
-        personRepository.delete(person);
+        String url = person.getUrl();
+        Message message = new Message("Server","The other user has left the conversation log out and" +
+                " get back again to enjoy more...");
+        if(personRepository.findById(Integer.parseInt(url))!=null){
+            simpMessagingTemplate.convertAndSendToUser(personRepository.findById(Integer.parseInt(url))
+                    .getName(),"/queue/messages",message);
+            personRepository.delete(person);
+            return ResponseEntity.ok(Map.of("msg", "updated"));
+        }
         return ResponseEntity.ok(Map.of("msg", "updated"));
     }
 

@@ -39,7 +39,12 @@ function connect(){
 }
 
 function showMessage(message) {
-    $(".table12").prepend(`<span> <b><i>${message.name} : </i></b>${message.text}</span> <br>`)
+    if (message.name=='Server'){
+        $(".table12").prepend(`<span style="color: red"> <b><i>${message.name} : </i></b>${message.text}</span> <br>`)
+    } else{
+        $(".table12").prepend(`<span> <b><i>${message.name} : </i></b>${message.text}</span> <br>`)
+    }
+
 }
 
 function sendMessage() {
